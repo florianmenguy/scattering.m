@@ -40,7 +40,7 @@ end
 
 
 %%
-T = N/8;
+T = N/2;
 opts{1}.time.size = N;
 opts{1}.time.T = T;
 opts{1}.time.max_Q = 16;
@@ -68,7 +68,7 @@ end
 archs = sc_setup(opts);
 
 %% Forward scattering
-for file_index = 1:nFiles
+for file_index = 1:17
     target_signal = waveforms(:,file_index);
     [target_S,target_U,target_Y] = sc_propagate(target_signal,archs);
     
@@ -88,6 +88,7 @@ for file_index = 1:nFiles
     rec_opt.bold_driver_brake = 0.5;
     [signal,summary] = ...
         sc_reconstruct(target_S,archs,rec_opt,nIterations,initial_signal);
+    signal = signal * max(abs(target_signal)) / max(abs(signal));
     
     %% Export
     file_name = file_infos(file_index).name;
